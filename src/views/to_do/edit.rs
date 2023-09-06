@@ -5,8 +5,8 @@ use crate::json_serialization::{to_do_item::ToDoItem, to_do_items::ToDoItems};
 
 use actix_web::{web, HttpResponse};
 
-use crate::database::establish_connection;
-
+use crate::database::DB;
+use crate::jwt::JwToken;
 use crate::schema::to_do;
 
 // pub async fn edit(to_do_item: web::Json<ToDoItem>) -> HttpResponse {
@@ -34,13 +34,12 @@ use crate::schema::to_do;
 //     return HttpResponse::Ok().json(ToDoItems::get_state());
 // }
 
-pub async fn edit(to_do_item: web::Json<ToDoItem>) -> HttpResponse {
-    let connection = establish_connection();
+pub async fn edit(to_do_item: web::Json<ToDoItem>, token: JwToken, db: DB) -> HttpResponse {
     let results = to_do::table.filter(to_do::columns::title.eq(&to_do_item.title));
 
     let _ = diesel::update(results)
         .set(to_do::columns::status.eq("DONE"))
-        .execute(&connection);
+        .execute(&db.connection);
 
     return HttpResponse::Ok().json(ToDoItems::get_state());
 }
