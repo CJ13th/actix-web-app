@@ -3,12 +3,10 @@ use diesel::prelude::*;
 
 use crate::json_serialization::{to_do_item::ToDoItem, to_do_items::ToDoItems};
 
-use crate::jwt::JwToken;
 use actix_web::{web, HttpResponse};
 
 use crate::database::establish_connection;
-use crate::models::item::item::Item;
-use crate::models::item::new_item::NewItem;
+
 use crate::schema::to_do;
 
 // pub async fn edit(to_do_item: web::Json<ToDoItem>) -> HttpResponse {
